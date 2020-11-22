@@ -5,7 +5,15 @@ import {
   MdDescription,
   MdLocalOffer
 } from "react-icons/md"
-import IframePreview from '../previews/IframePreview'
+import EyeIcon from 'part:@sanity/base/eye-icon'
+import EditIcon from 'part:@sanity/base/edit-icon'
+// Web Preview
+import IframePreview from '../previews/iframe/IframePreview'
+import IframeMobilePreview from '../previews/iframe/IframeMobilePreview'
+import SeoPreview from '../previews/seo/SeoPreviews'
+
+// a11y preview
+import ColorblindPreview from '../previews/a11y/colorblind-filter/ColorblindPreview'
 
 // Web preview configuration
 const remoteURL = 'https://yws-v-1-mono.netlify.app'
@@ -22,13 +30,29 @@ export const getDefaultDocumentNode = props => {
    * https://www.sanity.io/docs/structure-builder-reference#getdefaultdocumentnode-97e44ce262c9
    */
   const { schemaType } = props
-  if (schemaType == 'post') {
+  if (schemaType == 'post' || schemaType == 'page') {
     return S.document().views([
-      S.view.form(),
+      S.view.form().icon(EditIcon),
       S.view
         .component(IframePreview)
         .title('Web preview')
-        .options({ previewURL })
+        .icon(EyeIcon)
+        .options({ previewURL }),
+        S.view
+        .component(IframeMobilePreview)
+        .title('Mobile preview')
+        .icon(EyeIcon)
+        .options({previewURL}),
+        S.view
+        .component(SeoPreview)
+        .options({previewURL})
+        .icon(EyeIcon)
+        .title('SEO Preview'),
+      S.view
+        .component(ColorblindPreview)
+        .options({previewURL})
+        .icon(EyeIcon)
+        .title('Colorblind'),
     ])
   }
   return S.document().views([S.view.form()])
